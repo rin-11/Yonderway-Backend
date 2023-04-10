@@ -1,20 +1,13 @@
-const Restaurant = require('../models/restaurant');
+// Import the restaurantData utility module
 const restaurantData = require('../utils/restaurantData');
 
+// Define the getRestaurantData controller function
 exports.getRestaurantData = async (city) => {
   try {
+    // Call the restaurantData utility function to get restaurant data for the provided city
     const restaurants = await restaurantData.getRestaurantData(city);
 
-    // Create a new restaurant object to save in the database
-    const restaurant = new Restaurant({
-      name: city,
-      city: city,
-      restaurants: restaurants
-    });
-
-    // Save the restaurant in the database
-    await restaurant.save();
-
+    // Return the restaurant data
     return restaurants;
   } catch (error) {
     console.error(error);
