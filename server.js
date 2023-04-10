@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const database = require('./utils/database');
+const database = require('./utils/database')
 const port = process.env.PORT
 
 
