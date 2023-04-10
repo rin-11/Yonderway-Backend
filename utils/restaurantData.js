@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const getDestinationRestaurants = async (city) => {
+const getRestaurantData = async (city) => {
   try {
     // Make a GET request to the Google Places API with the provided city name and Google API key
     const response = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', {
@@ -27,5 +27,5 @@ const getDestinationRestaurants = async (city) => {
   }
 };
 
-// Export the getDestinationRestaurants function
-module.exports = { getDestinationRestaurants };
+// Export the getRestaurantData function
+module.exports = { getRestaurantData };

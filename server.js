@@ -2,13 +2,13 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const database = require("./utils/database");
-const destinationsRoutes = require("./routes/destinations");
+const restaurantRoutes = require("./routes/restaurant");
 require("dotenv").config();
 
 database.connect();
 
 app.use(cors());
-app.use("/destinations", destinationsRoutes);
+app.use("/restaurant", restaurantRoutes);
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
