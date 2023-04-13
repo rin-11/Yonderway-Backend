@@ -12,4 +12,19 @@ function connect() {
     .on("error", (error) => console.log(error));
 }
 
-module.exports = { connect };
+// Define the schema for the Restaurant model
+const RestaurantSchema = new mongoose.Schema({
+  name: String,
+  city: String,
+  restaurants: [
+    {
+      name: String,
+      rating: Number,
+      description: String,
+      photo: String
+    }
+  ]
+});
+
+// Export the Restaurant model, which is based on the RestaurantSchema
+module.exports = { connect, Restaurant: mongoose.model('Restaurant', RestaurantSchema) };
