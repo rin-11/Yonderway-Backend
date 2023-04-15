@@ -9,6 +9,7 @@ const database = require("./utils/database");
 const restaurantRoutes = require("./routes/restaurants");
 const attractionsRoutes = require("./routes/attractions");
 const destinationsRouter = require('./routes/destinations');
+const usersRouter = require('./routes/users');
 
 const User = require('./models/users')
 
@@ -34,7 +35,7 @@ app.use("/attractions", attractionsRoutes);
 app.use('/destinations', destinationsRouter);
 app.use('/api/destinations', destinationsRouter);
 
-// app.use('/register', usersRouter);
+app.use('/register', usersRouter);
 // app.use('/login', usersRouter);
 
 
