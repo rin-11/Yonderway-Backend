@@ -5,7 +5,7 @@ const database = require("./utils/database");
 const restaurantRoutes = require("./routes/restaurants");
 const attractionsRoutes = require("./routes/attractions");
 const destinationsRouter = require('./routes/destinations');
-
+const hotelRoutes = require('./routes/hotels');
 
 require("dotenv").config();
 
@@ -16,6 +16,7 @@ app.use("/restaurant", restaurantRoutes);
 app.use("/attractions", attractionsRoutes);
 app.use('/destinations', destinationsRouter);
 app.use('/api/destinations', destinationsRouter);
+app.use('/hotel', hotelRoutes);
 
 
 
