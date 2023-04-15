@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const bcrypt = require("bcrypt");
+const session = require('express-session');
+
 
 const database = require("./utils/database");
 const restaurantRoutes = require("./routes/restaurants");
@@ -15,6 +17,16 @@ const User = require('./models/users')
 require("dotenv").config();
 
 database.connect();
+
+
+// ADD SESSION KEY TO .ENV FILE (ON TRELLO)
+const SESSION_SECRET = process.env.SESSION_SECRET
+console.log(SESSION_SECRET); // should see session key in console if working 
+app.use(session({
+    secret: SESSION_SECRET, 
+    resave: false, 
+    saveUninitialized: false 
+}));
 
 app.use(cors());
 app.use("/restaurant", restaurantRoutes);
