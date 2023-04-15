@@ -30,24 +30,14 @@ app.use(session({
 }));
 
 // database connection
-// mongoose.connect(process.env.DATABASE_URL, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-//   }); 
 
-  // Mongo error/success messages
-//   const db = mongoose.connection
-//   db.on('error', (err) => console.log(`${err.message} MongoDB Not Running!`));
-//   db.on('connected', () => console.log('mongo connected'));    
-//   db.on('disconnected', () => console.log('mongo disconnected'));
-  
-//   app.use(express.json());
-//   app.use(express.urlencoded({extended:true}));
-//       //gives us access to req.body
-//   app.use(methodOverride('_method'));
-//       //gives us access to DELETE 
-//   app.use(express.static('public'));
-//       //link application to router
+  app.use(express.json());
+  app.use(express.urlencoded({extended:true}));
+      //gives us access to req.body
+  // app.use(methodOverride('_method'));
+  //     //gives us access to DELETE 
+  // app.use(express.static('public'));
+  //     //link application to router
   
       
 

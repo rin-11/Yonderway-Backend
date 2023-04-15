@@ -1,13 +1,13 @@
 const router = require('express').Router()
 const userData = require('../models/users')
 const bcrypt = require("bcrypt");
+const session = require('express-session');
 
-// router.get('/register', UserCtrl.getUser)
-// router.post('/register', UserCtrl.createUser)
 
 const getUser = (req, res) => {
 	userData.User.find({})
 };
+
 const createUser = (req, res) => {
 	userData.User.create(req.body)
 
@@ -25,8 +25,6 @@ const createUser = (req, res) => {
 			}
 		})
 	};
-
-
 
 
 module.exports = {
