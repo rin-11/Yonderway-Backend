@@ -12,7 +12,7 @@ require("dotenv").config();
 database.connect();
 
 app.use(cors());
-app.use("/restaurant", restaurantRoutes);
+app.use("/restaurants", restaurantRoutes);
 app.use("/attractions", attractionsRoutes);
 app.use('/destinations', destinationsRouter);
 app.use('/api/destinations', destinationsRouter);
