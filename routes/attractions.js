@@ -1,3 +1,4 @@
+// Import the required modules and controllers
 const express = require('express');
 const router = express.Router();
 const { getLocalAttractions } = require('../controllers/attractions');

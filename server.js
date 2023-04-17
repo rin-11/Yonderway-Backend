@@ -1,19 +1,16 @@
-const express = require("express");
-const app = express();
-const cors = require("cors");
+const express = require("express"); // Import the Express.js framework
+const app = express(); // Create an instance of the Express application
+const cors = require("cors"); // Import the CORS middleware
+const database = require("./utils/database"); // Import the database module
 const bcrypt = require("bcrypt");
 const session = require('express-session');
 const mongoose = require('mongoose');
-
-const database = require("./utils/database");
-const restaurantRoutes = require("./routes/restaurants");
-const attractionsRoutes = require("./routes/attractions");
-const destinationsRouter = require('./routes/destinations');
+const restaurantRoutes = require("./routes/restaurants"); // Import the routes for the restaurant endpoint
+const attractionsRouter = require('./routes/attractions'); // Import the routes for the attractions endpoint
+const destinationsRouter = require('./routes/destinations'); // Import the routes for the destinations endpoint
+const hotelRoutes = require('./routes/hotels'); // Import the routes for the hotels endpoint
 const usersRouter = require('./routes/users');
-
 const User = require('./models/users')
-
-
 
 require("dotenv").config();
 
@@ -36,12 +33,13 @@ app.use(express.urlencoded({extended:true}));
 app.use("/restaurant", restaurantRoutes);
 app.use("/attractions", attractionsRoutes);
 app.use('/destinations', destinationsRouter);
+app.use('/hotel', hotelRoutes); // Use the hotels routes for the /hotel endpoint
 app.use('/api/destinations', destinationsRouter);
 
 
 const userRoutes = require('./routes/users')
 app.use('/register', userRoutes);
-// app.use('/login', usersRouter);
+
 
 app.use((req, res) => {
 	res.status(404).json({message: "NOT A PROPER ROUTE"})
