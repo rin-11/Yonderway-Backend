@@ -29,26 +29,23 @@ app.use(session({
     saveUninitialized: false 
 }));
 
-// database connection
-
-  app.use(express.json());
-  app.use(express.urlencoded({extended:true}));
-      //gives us access to req.body
-  // app.use(methodOverride('_method'));
-  //     //gives us access to DELETE 
-  // app.use(express.static('public'));
-  //     //link application to router
-  
-      
 
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 app.use("/restaurant", restaurantRoutes);
 app.use("/attractions", attractionsRoutes);
 app.use('/destinations', destinationsRouter);
 app.use('/api/destinations', destinationsRouter);
 
-app.use('/register', usersRouter);
+
+const userRoutes = require('./routes/users')
+app.use('/register', userRoutes);
 // app.use('/login', usersRouter);
+
+app.use((req, res) => {
+	res.status(404).json({message: "NOT A PROPER ROUTE"})
+})
 
 
 const port = process.env.PORT || 4000;
