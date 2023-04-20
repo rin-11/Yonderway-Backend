@@ -1,13 +1,25 @@
-// Import the restaurantData utility module
+// const Restaurant = require('../models/Restaurant');
 const restaurantData = require('../utils/restaurantData');
 
-// Define the getRestaurantData controller function
 exports.getRestaurantData = async (city) => {
   try {
-    // Call the restaurantData utility function to get restaurant data for the provided city
+    // Commenting out database code for now
+    // const existingRestaurants = await Restaurant.find({ city });
+    //
+    // if (existingRestaurants.length > 0) {
+    //   return existingRestaurants;
+    // }
+
     const restaurants = await restaurantData.getRestaurantData(city);
 
-    // Return the restaurant data
+    // Commenting out database code for now
+    // const savedRestaurants = await Restaurant.insertMany(restaurants.map((restaurant) => ({
+    //   ...restaurant,
+    //   city
+    // })));
+    //
+    // return savedRestaurants;
+
     return restaurants;
   } catch (error) {
     console.error(error);

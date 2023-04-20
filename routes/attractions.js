@@ -1,22 +1,23 @@
-// Import the required modules and controllers
 const express = require('express');
 const router = express.Router();
 const { getLocalAttractions } = require('../controllers/attractions');
 
-// Define a GET route with a city parameter and attraction type parameter for retrieving local attractions
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
 router.get('/:city/:type', async (req, res) => {
   try {
-    // Call the getLocalAttractions function with the provided city and attraction type parameters
-    const attractions = await getLocalAttractions(req.params.city, req.params.type);
+    const city = capitalize(req.params.city);
+    const attractionType = req.params.type;
 
-    // Return a JSON response with the attractions data
+    const attractions = await getLocalAttractions(city, attractionType);
+
     res.json({ status: true, message: 'Success', data: attractions });
   } catch (error) {
-    // Log any errors to the console and return a 500 error response
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-// Export the router for use in other modules
 module.exports = router;
