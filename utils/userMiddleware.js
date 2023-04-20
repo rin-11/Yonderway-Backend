@@ -1,3 +1,10 @@
+// Use JWT Token to send user auth token from backend to frontend
+const token = require('jsonwebtoken');
+const genToken = (id) => {
+    return token.sign({id}, process.env.JWT_SECRET)
+};
+
+
 // User Error Handling Middleware
 const notFound = (req, res, next) => { // when the route is not found
     const error = new Error(`URL Not Found`);
@@ -15,4 +22,5 @@ const notFound = (req, res, next) => { // when the route is not found
     });
   };
   
-  module.exports = { notFound, errorHandler };
+  module.exports = { notFound, errorHandler, genToken };
+
