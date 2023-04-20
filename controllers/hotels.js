@@ -1,16 +1,21 @@
-// Import the hotelData utility module
 const hotelData = require('../utils/hotelData');
+const { Hotel } = require('../utils/database'); // Import the Hotel model
 
-// Define an asynchronous function for retrieving hotel data for a given city
 exports.getHotelData = async (city) => {
   try {
-    // Call the getHotelData function from the hotelData module with the provided city parameter
+    const existingHotelData = await Hotel.findOne({ city });
+
+    if (existingHotelData) {
+      return existingHotelData.hotels;
+    }
+
     const hotels = await hotelData.getHotelData(city);
 
-    // Return the retrieved hotel data
+    const newHotelData = new Hotel({ city, hotels });
+    await newHotelData.save();
+
     return hotels;
   } catch (error) {
-    // Log any errors to the console
     console.error(error);
   }
 };

@@ -1,17 +1,23 @@
-// Import the getLocalAttractions function from the attractionsData module
 const attractionData = require('../utils/attractionsData');
+const Attraction = require('../models/Attraction');
 
-// Define an asynchronous function that accepts a city and attraction type parameter and returns a list of local attractions
 exports.getLocalAttractions = async (city, attractionType) => {
-  try {
-    // Call the getLocalAttractions function with the provided city and attraction type parameters
-    const attractions = await attractionData.getLocalAttractions(city, attractionType);
+  const attraction = await Attraction.findOne({ city, type: attractionType });
 
-    // Return the list of attractions
+  if (attraction) {
+    return attraction.attractions;
+  } else {
+    const attractions = await attractionData.getLocalAttractions(city, attractionType);
+    await saveAttractions(city, attractionType, attractions);
     return attractions;
-  } catch (error) {
-    // Log any errors to the console and return null
-    console.error(error);
-    return null;
   }
+};
+
+const saveAttractions = async (city, attractionType, attractions) => {
+  const newAttraction = new Attraction({
+    city,
+    type: attractionType,
+    attractions,
+  });
+  await newAttraction.save();
 };
