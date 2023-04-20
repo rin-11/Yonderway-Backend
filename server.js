@@ -11,7 +11,7 @@ const destinationsRouter = require('./routes/destinations'); // Import the route
 const hotelRoutes = require('./routes/hotels'); // Import the routes for the hotels endpoint
 
 
-const userRoutes = require('./routes/userRoutes');
+const  userRoutes  = require('./routes/userRoutes');
 const { errorHandler, notFound } = require('./utils/userMiddleware');
 
 require("dotenv").config();
@@ -30,7 +30,9 @@ app.use('/hotel', hotelRoutes); // Use the hotels routes for the /hotel endpoint
 app.use('/api/destinations', destinationsRouter);
 
 
-
+app.get('/', (req, res) => {
+  res.send("API is running..");
+});
 
 app.use('/api/users', userRoutes);
 app.use(notFound);

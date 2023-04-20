@@ -17,7 +17,6 @@ const notFound = (req, res, next) => { // when the route is not found
     res.status(statusCode);
     res.json({
       message: err.message,
-      // add 'NODE_ENV=development' into .env file
       stack: process.env.NODE_ENV === "production" ? null : err.stack,
     });
   };
