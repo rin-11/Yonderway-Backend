@@ -10,7 +10,8 @@ function connect() {
     .on("open", () => console.log("connected to the DB"))
     .on("close", () => console.log("disconnected from the DB"))
     .on("error", (error) => console.log(error));
-}
+};
+
 
 // Define the schema for the Restaurant model
 const RestaurantSchema = new mongoose.Schema({
