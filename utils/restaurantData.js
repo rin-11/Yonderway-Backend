@@ -12,7 +12,7 @@ const getLocalRestaurants = async (city) => {
     const restaurants = response.data.businesses.map((business) => ({
       name: business.name,
       rating: business.rating,
-      description: business.location.address1,
+      address: business.location.display_address.join(', '), // Use display_address and join with a comma
       photo: business.image_url,
     }));
     return restaurants;
