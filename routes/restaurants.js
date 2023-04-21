@@ -1,20 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const { getRestaurantData } = require('../controllers/restaurants');
+const { getRestaurantData } = require('../utils/restaurantData');
 
-function capitalize(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+function capitalizeFirstLetter(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 router.get('/:city', async (req, res) => {
   try {
-    const city = capitalize(req.params.city);
+    const cityName = capitalizeFirstLetter(req.params.city);
+    const restaurants = await getRestaurantData(cityName);
 
-    const restaurants = await getRestaurantData(city);
+    const slicedRestaurants = restaurants.slice(0, 4); // Limit the results to 4
 
-    res.json({ status: true, message: 'Success', data: restaurants });
+    res.json({ status: true, message: 'Success', data: slicedRestaurants });
   } catch (error) {
     console.error(error);
+
     res.status(500).json({ message: 'Internal server error' });
   }
 });

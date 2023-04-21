@@ -1,11 +1,23 @@
 const axios = require('axios');
 
-const getLocalRestaurants = async (city) => {
+const getRestaurantData = async (city) => {
   try {
-    const response = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', {
+    const geocodeResponse = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
       params: {
-        query: `restaurants in ${city}`,
+        address: city,
         key: process.env.GOOGLE_KEY,
+      },
+    });
+
+    const location = geocodeResponse.data.results[0].geometry.location;
+
+    const response = await axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json', {
+      params: {
+        location: `${location.lat},${location.lng}`,
+        radius: 5000,
+        type: 'restaurant', // Use 'restaurant' type for restaurants
+        key: process.env.GOOGLE_KEY,
+        limit: 4,
       },
     });
 
@@ -13,8 +25,8 @@ const getLocalRestaurants = async (city) => {
       return {
         name: restaurant.name,
         rating: restaurant.rating,
-        description: restaurant.formatted_address,
-        photo: restaurant.photos ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${restaurant.photos[0].photo_reference}&key=${process.env.GOOGLE_KEY}` : '',
+        description: restaurant.vicinity,
+        photo: restaurant.photos ? restaurant.photos[0].photo_reference : '',
       };
     });
 
@@ -24,4 +36,4 @@ const getLocalRestaurants = async (city) => {
   }
 };
 
-module.exports = { getLocalRestaurants };
+module.exports = { getRestaurantData };
