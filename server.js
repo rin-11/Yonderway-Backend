@@ -3,29 +3,20 @@ const app = express(); // Create an instance of the Express application
 const cors = require("cors"); // Import the CORS middleware
 const database = require("./utils/database"); // Import the database module
 
-const bcrypt = require("bcrypt");
-const session = require('express-session');
-const mongoose = require('mongoose');
-const User = require('./models/users')
 
 const restaurantRoutes = require("./routes/restaurants"); // Import the routes for the restaurant endpoint
 const attractionsRouter = require('./routes/attractions'); // Import the routes for the attractions endpoint
 const destinationsRouter = require('./routes/destinations'); // Import the routes for the destinations endpoint
 const hotelRoutes = require('./routes/hotels'); // Import the routes for the hotels endpoint
-const userRoutes = require('./routes/userRoutes');
 
+
+const userRoutes = require('./routes/userRoutes');
 const { errorHandler, notFound } = require('./utils/userMiddleware');
 require("dotenv").config();
 
 database.connect();
 
-const SESSION_SECRET = process.env.SESSION_SECRET
-console.log(SESSION_SECRET);
-app.use(session({
-    secret: SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false
-}));
+
 
 app.use(cors());
 app.use(express.json());

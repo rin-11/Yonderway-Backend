@@ -15,7 +15,6 @@ const loginUser = asyncHandler(async (req, res) => {
         res.json({
             _id: user._id,
             username: user.username,
-            isAdmin: user.isAdmin,
             token: genToken(user._id)
         })
         // if the user is not found
@@ -47,7 +46,6 @@ const registerUser = asyncHandler(async (req, res) => {
         res.status(201).json({ // successful
             _id: user._id,
             username: user.username,
-            isAdmin: user.isAdmin,
             token: genToken(user._id)
         });
     } else {
