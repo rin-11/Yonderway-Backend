@@ -1,33 +1,56 @@
-const { getLocalRestaurants } = require("../utils/restaurantData");
-const Restaurant = require("../models/Restaurant");
+const axios = require('axios');
+const { Restaurant } = require('../utils/database');
 
-function capitalizeFirstLetter(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-const getRestaurants = async (req, res) => {
+exports.getRestaurantData = async (city) => {
   try {
-    const city = capitalizeFirstLetter(req.params.city);
+    const existingRestaurantData = await Restaurant.findOne({ city });
 
-    const restaurants = await getLocalRestaurants(city);
-
-    // Save the restaurants array to the database
-    const existingCity = await Restaurant.findOne({ city });
-    if (existingCity) {
-      existingCity.restaurants = restaurants;
-      await existingCity.save();
-    } else {
-      const newCity = new Restaurant({ city, restaurants });
-      await newCity.save();
+    if (existingRestaurantData) {
+      return existingRestaurantData.restaurants;
     }
 
-    res.status(200).json(restaurants);
+    const restaurants = await getRestaurantDataFromGoogle(city);
+
+    const newRestaurantData = new Restaurant({ city, restaurants });
+    await newRestaurantData.save();
+
+    return restaurants;
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
   }
 };
 
-module.exports = {
-  getRestaurants,
+const getRestaurantDataFromGoogle = async (city) => {
+  try {
+    const geocodeResponse = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+      params: {
+        address: city,
+        key: process.env.GOOGLE_GEOCODE_KEY,
+      },
+    });
+
+    const location = geocodeResponse.data.results[0].geometry.location;
+
+    const response = await axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json', {
+      params: {
+        location: `${location.lat},${location.lng}`,
+        radius: 5000,
+        type: 'restaurant',
+        key: process.env.GOOGLE_KEY,
+      },
+    });
+
+    const restaurants = response.data.results.map((restaurant) => {
+      return {
+        name: restaurant.name,
+        rating: restaurant.rating,
+        description: restaurant.vicinity,
+        photo: restaurant.photos ? restaurant.photos[0].photo_reference : '',
+      };
+    });
+
+    return restaurants;
+  } catch (error) {
+    console.error(error);
+  }
 };

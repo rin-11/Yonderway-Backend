@@ -1,3 +1,4 @@
+/*
 const axios = require('axios');
 
 const yelp = axios.create({
@@ -18,3 +19,4 @@ const yelp = axios.create({
 });
 
 module.exports = yelp;
+*/
