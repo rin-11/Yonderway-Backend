@@ -1,16 +1,16 @@
 const mongoose = require('mongoose');
 
-// Check if the Restaurant model has already been defined
-// and use the existing model if it has
-module.exports = mongoose.models.Restaurant || mongoose.model('Restaurant', new mongoose.Schema({
-  name: String,
+const RestaurantSchema = new mongoose.Schema({
   city: String,
   restaurants: [
     {
       name: String,
       rating: Number,
       description: String,
-      photo: String
-    }
-  ]
-}));
+      photo: String,
+    },
+  ],
+});
+
+const Restaurant = mongoose.models.Restaurant || mongoose.model('Restaurant', RestaurantSchema);
+module.exports = Restaurant;
