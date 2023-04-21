@@ -2,15 +2,16 @@ const express = require("express"); // Import the Express.js framework
 const app = express(); // Create an instance of the Express application
 const cors = require("cors"); // Import the CORS middleware
 const database = require("./utils/database"); // Import the database module
-
+const bodyParser = require('body-parser'); // Import the bodyparser middleware
 
 const restaurantRoutes = require("./routes/restaurants"); // Import the routes for the restaurant endpoint
 const attractionsRouter = require('./routes/attractions'); // Import the routes for the attractions endpoint
 const destinationsRouter = require('./routes/destinations'); // Import the routes for the destinations endpoint
 const hotelRoutes = require('./routes/hotels'); // Import the routes for the hotels endpoint
 
+const wishlistRoutes = require('./routes/wishlistRoutes'); // Import the wishlist routes
 
-const userRoutes = require('./routes/userRoutes');
+const userRoutes = require('./routes/userRoutes'); // Import the user routes
 const { errorHandler, notFound } = require('./utils/userMiddleware');
 require("dotenv").config();
 
@@ -19,8 +20,10 @@ database.connect();
 
 
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+// app.use(express.json());
+// app.use(express.urlencoded({extended:true}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/restaurant", restaurantRoutes);
 app.use("/attractions", attractionsRouter);
@@ -28,6 +31,7 @@ app.use('/destinations', destinationsRouter);
 app.use('/hotel', hotelRoutes);
 app.use('/api/destinations', destinationsRouter);
 app.use('/api/users', userRoutes);
+app.use('/api/wishlist', wishlistRoutes);
 
 app.get('/', (req, res) => {
   res.send("API is running..");
