@@ -24,7 +24,6 @@ const RestaurantSchema = new mongoose.Schema({
   ]
 });
 
-// Define the schema for the Hotel model
 const HotelSchema = new mongoose.Schema({
   name: String,
   city: String,
@@ -38,8 +37,6 @@ const HotelSchema = new mongoose.Schema({
   ]
 });
 
-module.exports = {
-  connect,
-  Restaurant: mongoose.model('Restaurant', RestaurantSchema),
-  Hotel: mongoose.model('Hotel', HotelSchema) // Export the Hotel model
-};
+exports.connect = connect;
+exports.Restaurant = mongoose.models.Restaurant || mongoose.model('Restaurant', RestaurantSchema);
+exports.Hotel = mongoose.models.Hotel || mongoose.model('Hotel', HotelSchema);

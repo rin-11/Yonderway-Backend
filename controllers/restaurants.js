@@ -1,22 +1,17 @@
-const restaurantData = require('../utils/restaurantData');
-const Restaurant = require('../models/Restaurant');
+const { getLocalRestaurants } = require("../utils/restaurantData");
 
-exports.getRestaurantData = async (city) => {
-  const restaurant = await Restaurant.findOne({ city });
+const getRestaurants = async (req, res) => {
+  try {
+    const city = req.params.city;
 
-  if (restaurant) {
-    return restaurant.restaurants;
-  } else {
-    const restaurants = await restaurantData.getRestaurantData(city);
-    await saveRestaurants(city, restaurants);
-    return restaurants;
+    const restaurants = await getLocalRestaurants(city);
+    res.status(200).json(restaurants);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
-const saveRestaurants = async (city, restaurants) => {
-  const newRestaurant = new Restaurant({
-    city,
-    restaurants,
-  });
-  await newRestaurant.save();
+module.exports = {
+  getRestaurants,
 };
