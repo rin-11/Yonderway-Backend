@@ -12,8 +12,9 @@ router.get('/:city/:type', async (req, res) => {
     const attractionType = req.params.type;
 
     const attractions = await getLocalAttractions(city, attractionType);
+    const slicedAttractions = attractions.slice(0, 4); // Limit the results to 4
 
-    res.json({ status: true, message: 'Success', data: attractions });
+    res.json({ status: true, message: 'Success', data: slicedAttractions });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });

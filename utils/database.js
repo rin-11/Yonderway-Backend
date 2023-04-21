@@ -10,7 +10,7 @@ function connect() {
     .on('close', () => console.log('disconnected from the DB'))
     .on('error', (error) => console.log(error));
 }
-
+/*
 const RestaurantSchema = new mongoose.Schema({
   name: String,
   city: String,
@@ -23,6 +23,7 @@ const RestaurantSchema = new mongoose.Schema({
     }
   ]
 });
+*/
 
 const HotelSchema = new mongoose.Schema({
   name: String,
@@ -38,5 +39,4 @@ const HotelSchema = new mongoose.Schema({
 });
 
 exports.connect = connect;
-exports.Restaurant = mongoose.models.Restaurant || mongoose.model('Restaurant', RestaurantSchema);
 exports.Hotel = mongoose.models.Hotel || mongoose.model('Hotel', HotelSchema);

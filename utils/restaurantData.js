@@ -1,24 +1,39 @@
-const yelp = require("./yelp");
+const axios = require('axios');
 
-const getLocalRestaurants = async (city) => {
+const getRestaurantData = async (city) => {
   try {
-    const searchRequest = {
-      term: "restaurants",
-      location: city,
-      limit: 4,
-      sort_by: "rating",
-    };
-    const response = await yelp.get("/businesses/search", { params: searchRequest });
-    const restaurants = response.data.businesses.map((business) => ({
-      name: business.name,
-      rating: business.rating,
-      address: business.location.display_address.join(', '), // Use display_address and join with a comma
-      photo: business.image_url,
-    }));
+    const geocodeResponse = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+      params: {
+        address: city,
+        key: process.env.GOOGLE_KEY,
+      },
+    });
+
+    const location = geocodeResponse.data.results[0].geometry.location;
+
+    const response = await axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json', {
+      params: {
+        location: `${location.lat},${location.lng}`,
+        radius: 5000,
+        type: 'restaurant', // Use 'restaurant' type for restaurants
+        key: process.env.GOOGLE_KEY,
+        limit: 4,
+      },
+    });
+
+    const restaurants = response.data.results.map((restaurant) => {
+      return {
+        name: restaurant.name,
+        rating: restaurant.rating,
+        description: restaurant.vicinity,
+        photo: restaurant.photos ? restaurant.photos[0].photo_reference : '',
+      };
+    });
+
     return restaurants;
   } catch (error) {
     console.error(error);
   }
 };
 
-module.exports = { getLocalRestaurants };
+module.exports = { getRestaurantData };
