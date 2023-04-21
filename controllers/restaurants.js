@@ -41,11 +41,15 @@ const getRestaurantDataFromGoogle = async (city) => {
     });
 
     const restaurants = response.data.results.map((restaurant) => {
+      const photoUrl = restaurant.photos
+        ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${restaurant.photos[0].photo_reference}&key=${process.env.GOOGLE_KEY}`
+        : '';
+
       return {
         name: restaurant.name,
         rating: restaurant.rating,
         description: restaurant.vicinity,
-        photo: restaurant.photos ? restaurant.photos[0].photo_reference : '',
+        photo: photoUrl,
       };
     });
 
