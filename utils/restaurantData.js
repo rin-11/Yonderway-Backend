@@ -1,23 +1,20 @@
-const axios = require('axios');
+const yelp = require("./yelp");
 
 const getLocalRestaurants = async (city) => {
   try {
-    const response = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', {
-      params: {
-        query: `restaurants in ${city}`,
-        key: process.env.GOOGLE_KEY,
-      },
-    });
-
-    const restaurants = response.data.results.map((restaurant) => {
-      return {
-        name: restaurant.name,
-        rating: restaurant.rating,
-        description: restaurant.formatted_address,
-        photo: restaurant.photos ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${restaurant.photos[0].photo_reference}&key=${process.env.GOOGLE_KEY}` : '',
-      };
-    });
-
+    const searchRequest = {
+      term: "restaurants",
+      location: city,
+      limit: 4,
+      sort_by: "rating",
+    };
+    const response = await yelp.get("/businesses/search", { params: searchRequest });
+    const restaurants = response.data.businesses.map((business) => ({
+      name: business.name,
+      rating: business.rating,
+      address: business.location.display_address.join(', '), // Use display_address and join with a comma
+      photo: business.image_url,
+    }));
     return restaurants;
   } catch (error) {
     console.error(error);
