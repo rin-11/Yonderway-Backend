@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { getWishlist } = require('../controllers/wishlistCtrl');
+// const { getWishlist } = require('../controllers/wishlistCtrl');
 
 // ROUTES
-router.route('/').post(getWishlist);
+// router.route('/').post(getWishlist);
 
 
 
@@ -67,4 +67,4 @@ router.route('/').post(getWishlist);
   // });
 
   
-module.exports = router;
+// module.exports = router;

@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const User = require('../models/userModel');
+const Wishlist = require('../models/wishlistModel');
 const { genToken } = require('../utils/userMiddleware');
 
 // User Login
@@ -57,6 +58,30 @@ const registerUser = asyncHandler(async (req, res) => {
     };
 });
 
+const createWishlist = asyncHandler(async (req, res) => {
+    const { userId } = req.params;
+    const { user, wishes } = req.body;
+    const wishlist = await Wishlist.create({
+        user,
+        wishes
+    });
+    if (wishlist){
+        res.status(201).json({ // successful
+            _id: wishlist._id,
+            user: wishlist.user,
+            wishes: wishlist.wishes,
+        });
+    } else {
+        res.status(400) // not successful
+        throw new Error('Wishlist Create Error')
+    };
+});
 
 
-module.exports = { registerUser, loginUser };
+
+
+
+
+
+
+module.exports = { registerUser, loginUser, createWishlist };

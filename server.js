@@ -9,7 +9,7 @@ const attractionsRouter = require('./routes/attractions'); // Import the routes 
 const destinationsRouter = require('./routes/destinations'); // Import the routes for the destinations endpoint
 const hotelRoutes = require('./routes/hotels'); // Import the routes for the hotels endpoint
 
-const wishlistRoutes = require('./routes/wishlistRoutes'); // Import the wishlist routes
+// const wishlistRoutes = require('./routes/wishlistRoutes'); // Import the wishlist routes
 
 const userRoutes = require('./routes/userRoutes'); // Import the user routes
 const { errorHandler, notFound } = require('./utils/userMiddleware');
@@ -31,7 +31,7 @@ app.use('/destinations', destinationsRouter);
 app.use('/hotel', hotelRoutes);
 app.use('/api/destinations', destinationsRouter);
 app.use('/api/users', userRoutes);
-app.use('/api/wishlist', wishlistRoutes);
+// app.use('/api/wishlist', wishlistRoutes);
 
 app.get('/', (req, res) => {
   res.send("API is running..");

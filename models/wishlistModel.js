@@ -1,22 +1,20 @@
 const mongoose = require('mongoose')
-const User = require('./userModel')
+// const User = require('./userModel')
 const Hotel = require('./Hotel')
 const Attraction = require('./Attraction')
 const Restaurant = require('./Restaurant')
 
-const ObjectID = mongoose.Schema.Types.ObjectId
-
 const wishlistSchema = new mongoose.Schema({
-	user: {type: ObjectID, required: true, ref: User},
+	// user: {type: mongoose.Schema.Types.ObjectId, required: true, ref: User},
 	wishes: [{
             hotels: [{
-                hotel: {type: ObjectID, ref: Hotel},
+                hotel: {type: mongoose.Schema.Types.ObjectId, ref: Hotel},
             }],
             attratctions: [{
-                attraction: {type: ObjectID, ref: Attraction},
+                attraction: {type: mongoose.Schema.Types.ObjectId, ref: Attraction},
             }],
             restaurants: [{
-                restaurant: {type: ObjectID, ref: Restaurant},
+                restaurant: {type: mongoose.Schema.Types.ObjectId, ref: Restaurant},
             }]
         }]
     });
