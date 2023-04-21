@@ -12,6 +12,10 @@ const hotelRoutes = require('./routes/hotels'); // Import the routes for the hot
 
 const userRoutes = require('./routes/userRoutes');
 const { errorHandler, notFound } = require('./utils/userMiddleware');
+
+// const wishlistRoutes = require('./routes/wishlistRoutes');
+
+
 require("dotenv").config();
 
 database.connect();
@@ -28,6 +32,7 @@ app.use('/destinations', destinationsRouter);
 app.use('/hotel', hotelRoutes);
 app.use('/api/destinations', destinationsRouter);
 app.use('/api/users', userRoutes);
+// app.use('/', wishlistRoutes);
 
 app.get('/', (req, res) => {
   res.send("API is running..");

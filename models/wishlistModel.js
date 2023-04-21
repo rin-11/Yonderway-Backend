@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const wishlistSchema = new mongoose.Schema({
+const wishlistSchema = mongoose.Schema({
 	userId: {type: String, required: true, unique: true},
 	wishlistItems: [{
         savedItems: {type: mongoose.Schema.Types.ObjectId, ref: 'apiData', requires: true}
