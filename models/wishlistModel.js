@@ -1,26 +1,20 @@
-// const mongoose = require('mongoose')
-// const User = require('./userModel')
-// const Hotel = require('./Hotel')
-// const Attraction = require('./Attraction')
-// const Restaurant = require('./Restaurant')
+const mongoose = require('mongoose');
 
-// const wishlistSchema = new mongoose.Schema({
-// 	user: {type: mongoose.Schema.Types.ObjectId, ref: User},
-//     wishes: [{
-//             hotels: [{
-//                 hotel: {type: mongoose.Schema.Types.ObjectId, ref: Hotel},
-//             }],
-//             attratctions: [{
-//                 attraction: {type: mongoose.Schema.Types.ObjectId, ref: Attraction},
-//             }],
-//             restaurants: [{
-//                 restaurant: {type: mongoose.Schema.Types.ObjectId, ref: Restaurant},
-//             }]
-//         }]
-//     });
 
-// // WishlistModel.find(id).populate('id')
+const wishlistSchema = new mongoose.Schema({
+    _id: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
+    // wishlistItems: [wishlistItemsSchema] 
+},
+    { timestamps: true }
+);
 
-// const Wishlist = mongoose.model('Wishlist', wishlistSchema)
 
-// module.exports = Wishlist;
+// child schema to pull hotel data and restaurant data into wishlist
+const wishlistItemsSchema = new mongoose.Schema({
+    hotels : {type: mongoose.Schema.Types.ObjectId, ref: "Hotel"},
+    restaurants : {type: mongoose.Schema.Types.ObjectId, ref: "Restaurant"},
+});
+
+const Wishlist = mongoose.model('Wishlist', wishlistSchema);
+
+module.exports = Wishlist;

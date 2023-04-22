@@ -1,31 +1,36 @@
-const asyncHandler = require('express-async-handler')
+const asyncHandler = require('express-async-handler');
+const jwtToken = require('jsonwebtoken');
+const { genToken } = require('./tokenCtrl');
+const bcrypt = require('bcrypt');
 const User = require('../models/userModel');
-const { genToken, notFound, errorHandler } = require('../utils/userMiddleware');
 
 // User Login
 const loginUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
 
+    try{
     // find user in DB by email
     const user = await User.findOne({ email });
-
-    // check email and password macth
-    if (user && (await user.matchPassword(password))){
-        // if the user if found return the user data
-        res.json({
-            _id: user._id,
-            username: user.username,
-            wishlist: user.wishlist,
-            email: user.email,
-            token: genToken(user._id)
-        })
-        // if the user is not found
-    } else {
-        res.status(400)
-        throw new Error('Invalid email and/or password')
+    // if user email not found
+    if (!user){
+        throw new Error('User Does Not Exist')
     }
-    await loginUser.save();
-
+    const checkPassword = await bcrypt.compare(password, user.password);
+    if (!checkPassword){
+        throw new Error('Incorrect Password')
+    }
+    // use jwttoken userID
+    const token = jwtToken.sign({ userId: user._id }, process.env.JWT_SECRET, {expiresIn: '3d'});
+    res.json({
+        token: genToken(user._id),
+        _id: user._id,
+        username: user.username,
+        email: user.email
+        });
+    } catch {
+        res.status(400)
+        throw new Error('Login Error')
+    }
 });
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -37,8 +42,6 @@ const registerUser = asyncHandler(async (req, res) => {
         res.status(400) // error
         throw new Error('User Already Exists')
     };
-
-
 
 // CREATE
     // if user does not exist create user in DB
@@ -64,39 +67,6 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 
-// User Wishlist Controllers
-
-// GET wishlist
-const getWishlist = asyncHandler(async (req, res) => {
-    const { id } = req.params;
-    try {
-        const findUserData = await User.findById();
-        res.json(findUserData)
-    } catch (error) {
-        throw new Error(error)
-        }
-    })
-
-// const createWishlist = asyncHandler(async (req, res) => {
-//     const { user, wishes } = req.body;
-//     const wishlist = await Wishlist.create({
-//         user,
-//         wishes
-//     });
-//     if (wishlist){
-//         res.status(201).json({ // successful
-//             _id: wishlist._id,
-//             user: wishlist.user,
-//             wishes: wishlist.wishes,
-//         });
-//     } else {
-//         res.status(400) // not successful
-//         throw new Error('Wishlist Create Error')
-//     };
-//     await createWishlist.save();
-// });
 
 
-
-
-module.exports = { registerUser, loginUser,  getWishlist };
+module.exports = { registerUser, loginUser };

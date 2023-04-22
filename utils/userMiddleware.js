@@ -1,12 +1,3 @@
-const User = require('../models/userModel');
-const asyncHandler = require('express-async-handler');
-
-
-// Use JWT Token to send user auth token from backend to frontend
-const token = require('jsonwebtoken');
-const genToken = (id) => {
-    return token.sign({id}, process.env.JWT_SECRET, {expiresIn: '3d'});
-};
 
 
 // User Error Handling Middleware
@@ -27,5 +18,5 @@ const notFound = (req, res, next) => { // when the route is not found
   
 
   
-  module.exports = { notFound, errorHandler, genToken };
+  module.exports = { notFound, errorHandler };
 
