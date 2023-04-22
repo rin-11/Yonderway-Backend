@@ -7,7 +7,7 @@ const token = require('jsonwebtoken');
 
 // Generate a JWT token with given user id
 const genToken = (id) => {
-    return token.sign({id}, process.env.JWT_SECRET, {expiresIn: '3d'});
+    return token.sign({ id }, process.env.JWT_SECRET, { expiresIn: '3d' });
 };
 
 // Middleware functions for handling errors
@@ -23,8 +23,8 @@ const errorHandler = (err, req, res, next) => {
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
     res.status(statusCode);
     res.json({
-      message: err.message,
-      stack: process.env.NODE_ENV === "production" ? null : err.stack,
+        message: err.message,
+        stack: process.env.NODE_ENV === "production" ? null : err.stack,
     });
 };
 

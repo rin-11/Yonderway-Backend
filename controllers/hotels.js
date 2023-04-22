@@ -1,6 +1,6 @@
 // Import required modules
 const { Hotel } = require('../utils/database');
-const asyncHandler = require('express-async-handler')
+const asyncHandler = require('express-async-handler');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
@@ -35,25 +35,31 @@ exports.getHotelData = async (city) => {
 
 // Define an asynchronous function that handles adding a hotel to a user's wishlist
 exports.addToWishlist = asyncHandler(async (req, res) => {
+  const { _id } = req.body; // find user ID
+  const { hotelId } = req.body; // find hotel data
+
   try {
-    // Retrieve the hotel and user documents using their respective parameters
-    const hotel = await Hotel.findOne({ name: req.params.name });
-    const user = await User.findOne({ username: req.params.username });
+    // find user
+    const user = User.findbyID(_id);
 
-    // Check if the hotel is already in the user's wishlist
-    const inWishlist = user.wishlist.hotels.find((hotel) === Hotel);
-
-    // If the hotel is already in the wishlist, remove it
+    // check if hotel is already in the wishlist
+    const inWishlist = user.wishlist.hotels.find((id) => id.toString() === hotelId);
     if (inWishlist) {
-      await User.findByIdAndDelete(_id, { $pull: { hotels: hotel } }, { new: true });
+      let user = await User.findByIdAndUpdate(_id, {
+        $pull: { hotels: hotelId },
+      }, {
+        new: true,
+      });
     } else {
-      // If the hotel is not in the wishlist, add it
-      await User.findByIdAndUpdate(_id, { $push: { hotels: hotel } }, { new: true });
+      let user = await User.findByIdAndUpdate(_id, {
+        $push: { hotels: hotelId },
+      }, {
+        new: true,
+      });
     }
-
-    // Return a JSON response with the updated user document
     res.json(user);
   } catch (error) {
     console.error(error);
   }
 });
+
