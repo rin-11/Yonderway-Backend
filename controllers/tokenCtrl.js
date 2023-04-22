@@ -8,7 +8,7 @@ const Hotel = require('../models/Hotel');
 const Restaurant = require('../models/Restaurant');
 const Wishlist = require('../models/wishlistModel');
 
-// create user ID using jsonwebtoke and store
+// Use JWT Token to send user auth token from backend to frontend
 const token = require('jsonwebtoken');
 const genToken = (id) => {
     return token.sign({id}, process.env.JWT_SECRET, {expiresIn: '3d'});
@@ -27,20 +27,40 @@ const getWishlistId = async (req, res, next) => {
 				_id: req.userId,
 			});
 			await userWishlist.save();
-			return res.json({ response: userWishlist.wishlistItems });
+			return res.json({ response: userWishlist.wishlistData });
 		}
 		req.wishlist = wishlist;
 		next();
     } catch (err) {
         console.error(error);
-        res.status(500).json({ message: 'Wishlsit Error' });
+        res.status(500).json({ message: 'Wishlist Error' });
         }
 };
 
 // get hotel ID 
-
+const getHotelId = async (req, res, next, id) => {
+	await Hotel.findById(id).exec((err, hotel) => {
+		if (err) {
+			res.status(400).json({
+				message: 'Hotel not found',
+			});
+		}
+		req.hotel = hotel;
+		next();
+	});
+};
 
 // get restaurant ID
+const getRestaurantId = async (req, res, next, id) => {
+	await Restaurant.findById(id).exec((err, restaurant) => {
+		if (err) {
+			res.status(400).json({
+				message: 'Restaurant not found',
+			});
+		}
+		req.restaurant = restaurant;
+		next();
+	});
+};
 
-
-module.exports = { genToken, getWishlistId } // add getHotelID and getRestaurantID
+module.exports = { genToken, getWishlistId, getHotelId, getRestaurantId } 

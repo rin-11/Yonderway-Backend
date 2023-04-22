@@ -52,7 +52,7 @@ app.use('/api/destinations', destinationsRouter);
 
 
 app.use('/user', userRoutes);
-// app.use('/wishlist', wishlistRoutes);
+app.use('/wishlist', wishlistRoutes);
 
 
 
