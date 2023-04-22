@@ -32,12 +32,11 @@ const registerUser = asyncHandler(async (req, res) => {
     const { username, email, password } = req.body;
 
     // check if user already exists by checking email
-    const userExists= await User.findOne({ email })
+    const userExists = await User.findOne({ email })
     if(userExists) {
         res.status(400) // error
         throw new Error('User Already Exists')
     };
-
 
 
 // CREATE
@@ -55,46 +54,30 @@ const registerUser = asyncHandler(async (req, res) => {
             email: user.email,
             wishlist: user.wishlist,
             token: genToken(user._id)
-        });
-    } else {
-        res.status(400) // not successful
-        throw new Error('User Register Error')
-    };
+        });  
     await registerUser.save();
+    res.json({ message: "User registered successfully"})
+    } else {
+    res.status(400) // not successful
+    throw new Error('User Register Error')
+};
 });
-
 
 // User Wishlist Controllers
 
 // GET wishlist
-const getWishlist = asyncHandler(async (req, res) => {
-    const { id } = req.params;
-    try {
-        const findUserData = await User.findById();
-        res.json(findUserData)
-    } catch (error) {
-        throw new Error(error)
-        }
-    })
 
-// const createWishlist = asyncHandler(async (req, res) => {
-//     const { user, wishes } = req.body;
-//     const wishlist = await Wishlist.create({
-//         user,
-//         wishes
-//     });
-//     if (wishlist){
-//         res.status(201).json({ // successful
-//             _id: wishlist._id,
-//             user: wishlist.user,
-//             wishes: wishlist.wishes,
-//         });
-//     } else {
-//         res.status(400) // not successful
-//         throw new Error('Wishlist Create Error')
-//     };
-//     await createWishlist.save();
-// });
+const getWishlist = asyncHandler(async (req, res) => {
+    const { wishlist } = req.body;
+    try {
+        const wishlistData = await User.findOne({ wishlist });
+    if (wishlistData) {
+        return wishlistData.wishlist;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  });
 
 
 
