@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+require('dotenv').config();
 const bcrypt = require("bcrypt");
 const { Hotel, Restaurant } = require('../utils/database'); // Import the Hotel and Restaurant model
 
@@ -8,19 +9,11 @@ const userSchema = new mongoose.Schema({
 	email: {type: String, required: true, unique: true},
 	password: {type: String, required: true},
     wishlist: [{
-        hotels: [{
-            hotel: {
-                type: mongoose.Schema.Types.ObjectId, 
-                ref: "Hotel"
-            },
-        }],
-        restaurants: [{
-            restaurant: {
-                type: mongoose.Schema.Types.ObjectId, 
-                ref: "Restaurant"
-            },
-        }]
-    }]
+            hotels: 
+                [{ type: mongoose.Schema.Types.ObjectId, ref: "Hotel" }],
+            // restaurants:
+            //     [{ type: mongoose.Schema.Types.ObjectId, ref: "Restaurant" }]
+                        }]
 },
     { timestamps: true}
 );

@@ -40,3 +40,4 @@ const HotelSchema = new mongoose.Schema({
 
 exports.connect = connect;
 exports.Hotel = mongoose.models.Hotel || mongoose.model('Hotel', HotelSchema);
+
