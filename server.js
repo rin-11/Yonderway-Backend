@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const axios = require("axios");
 const database = require("./utils/database");
+const bodyParser = require('body-parser');
 
 const restaurantRoutes = require("./routes/restaurants");
 const attractionsRouter = require('./routes/attractions');
@@ -17,8 +18,8 @@ database.connect();
 
 // Middlware
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json()); // handle json data
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 /*

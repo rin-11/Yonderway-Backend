@@ -63,7 +63,7 @@ const registerUser = asyncHandler(async (req, res) => {
         res.status(400) // not successful
         throw new Error('User Register Error')
     };
-    await registerUser.save();
+    await User.save();
 });
 
 
