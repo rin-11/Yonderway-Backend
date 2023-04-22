@@ -5,17 +5,13 @@ const { addToWishlist } = require('../controllers/hotels');
 const { genToken } = require('../utils/userMiddleware');
 
 // User Register/Login routes
-    router.route('/').post(registerUser);
-    router.route('/login').post(loginUser);
-
-
+router.route('/')
+    .post(registerUser); // Register new user
+router.route('/login')
+    .post(loginUser); // User login
 
 // User Wishlist Routes
-
-    // Show (GET) User Wishlist
-    router.get('/wishlist', getWishlist);
-    // Update (PUT) or (DELETE) from User Wishlist
-    router.put('/wishlist', addToWishlist, genToken);
-
+router.get('/wishlist', getWishlist); // Get user wishlist
+router.put('/wishlist', addToWishlist, genToken); // Update or delete user wishlist
 
 module.exports = router;

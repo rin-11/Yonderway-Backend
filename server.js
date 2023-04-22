@@ -1,3 +1,4 @@
+// Import necessary modules and files
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -10,44 +11,37 @@ const hotelRoutes = require('./routes/hotels');
 const userRoutes = require('./routes/userRoutes');
 const { errorHandler, notFound } = require('./utils/userMiddleware');
 require("dotenv").config();
+
+// Connect to the database
 database.connect();
+
+// Use CORS middleware to enable cross-origin resource sharing
 app.use(cors());
+
+// Parse request bodies as JSON
 app.use(express.json());
+
+// Parse URL-encoded request bodies
 app.use(express.urlencoded({ extended: true }));
-/*
-// Yelp API request route
-app.get("/api/restaurants/:city", async (req, res) => {
-  try {
-    const city = req.params.city;
-    const yelpResponse = await axios.get("https://api.yelp.com/v3/businesses/search", {
-      headers: {
-        Authorization: `Bearer ${process.env.YELP_API_KEY}`,
-      },
-      params: {
-        term: "restaurants",
-        location: city,
-        sort_by: "rating",
-        limit: 4,
-      },
-    });
-    res.json(yelpResponse.data);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "An error occurred while fetching restaurants." });
-  }
-});
-*/
+
+// Define routes
 app.use("/restaurants", restaurantRoutes);
 app.use("/attractions", attractionsRouter);
 app.use('/destinations', destinationsRouter);
 app.use('/hotels', hotelRoutes);
 app.use('/api/destinations', destinationsRouter);
 app.use('/api/users', userRoutes);
+
+// Define a simple root route
 app.get('/', (req, res) => {
   res.send("API is running..");
 });
+
+// Use custom middleware for error handling
 app.use(notFound);
 app.use(errorHandler);
+
+// Start the server on the specified port
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
