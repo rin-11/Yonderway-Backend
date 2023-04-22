@@ -1,13 +1,17 @@
 const express = require('express');
 const router = express.Router();
 
-const { registerUser, loginUser } = require('../controllers/userCtrl');
-
+const { registerUser, loginUser, getWishlist } = require('../controllers/userCtrl');
+const { addToWishlist } = require('../controllers/hotels');
+const { genToken } = require('../utils/userMiddleware');
 
 // User Register/Login routes
-    // create new user
-    router.post('/register', registerUser);
-    // sign in existing user
-    router.post('/login', loginUser);
+router.post('/register', registerUser); // Register new user
+router.post('/login', loginUser); // User login
+
+// User Wishlist Routes
+router.get('/wishlist', getWishlist); // Get user wishlist
+router.put('/wishlist', addToWishlist, genToken); // Update or delete user wishlist
 
 module.exports = router;
+

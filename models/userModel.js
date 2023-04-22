@@ -1,32 +1,36 @@
 const mongoose = require('mongoose');
-const bcrypt = require("bcrypt");
+require('dotenv').config(); // Import dotenv to handle environmental variables
+const bcrypt = require("bcrypt"); // Import bcrypt for password hashing
 
+// Import the Hotel and Restaurant model
+const { Hotel, Restaurant } = require('../utils/database');
+
+// Define the user schema
 const userSchema = new mongoose.Schema({
-	username: {type: String},
-	email: {type: String, required: true, unique: true},
-	password: {type: String, required: true},
-    wishlist: {type: mongoose.Schema.Types.ObjectId, ref: "Wishlist"},
-        },
-    { timestamps: true }
-);
+  username: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  wishlist: [{
+    hotels: [{ type: mongoose.Schema.Types.ObjectId, ref: "Hotel" }],
+    // restaurants: [{ type: mongoose.Schema.Types.ObjectId, ref: "Restaurant" }]
+  }]
+}, { timestamps: true });
 
-// user password decryption
+// Add a method to the user schema to match the password entered during login with the hashed password in the database
 userSchema.methods.matchPassword = async function (password) {
-    return await bcrypt.compare(password, this.password)
+  return await bcrypt.compare(password, this.password);
 };
 
-// before saving user password encryption
-userSchema.pre('save', async function (next) { 
-    if(!this.isModified('password')) {
-        next();
-    }
-    // bcrypt salt to generate encrypted code for password
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
+// Add a pre-hook to the user schema to encrypt the password before saving it to the database
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
+    next();
+  }
+  const salt = await bcrypt.genSalt(10); // Generate a salt for password hashing
+  this.password = await bcrypt.hash(this.password, salt); // Hash the password with the generated salt
 });
 
+// Create the User model from the user schema
 const User = mongoose.model('User', userSchema);
 
-module.exports = User;
-
-
+module.exports = User; // Export the User model

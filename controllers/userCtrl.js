@@ -5,68 +5,79 @@ const { notFound, errorHandler } = require('../utils/userMiddleware');
 const bcrypt = require('bcrypt');
 const User = require('../models/userModel');
 
-// User Login
+// Define an asynchronous function for user login
 const loginUser = asyncHandler(async (req, res) => {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    // find user in DB by email
-    const user = await User.findOne({ email });
+  // Find the user in the database using their email
+  const user = await User.findOne({ email });
 
-    // check email and password macth
-    if (user && (await user.matchPassword(password))){
-        // if the user if found return the user data
-        res.json({
-            _id: user._id,
-            username: user.username,
-            wishlist: user.wishlist,
-            email: user.email,
-            token: genToken(user._id)
-        })
-        // if the user is not found
-    } else {
-        res.status(400)
-        throw new Error('Invalid email and/or password')
-    }
-    await loginUser.save();
-
-});
-
-const registerUser = asyncHandler(async (req, res) => {
-    const { username, email, password } = req.body;
-
-    // check if user already exists by checking email
-    const userExists= await User.findOne({ email })
-    if(userExists) {
-        res.status(400) // error
-        throw new Error('User Already Exists')
-    };
-
-
-
-// CREATE
-    // if user does not exist create user in DB
-    const user = await User.create({
-        username,
-        email,
-        password
+  // Check if the user exists and if their password matches
+  if (user && (await user.matchPassword(password))) {
+    // If the user is found, return the user data along with a generated token
+    res.json({
+      _id: user._id,
+      username: user.username,
+      wishlist: user.wishlist,
+      email: user.email,
+      token: genToken(user._id),
     });
-    // once user is created return success with DB assigned ID
-    if(user){
-        res.status(201).json({ // successful
-            _id: user._id,
-            username: user.username,
-            email: user.email,
-            wishlist: user.wishlist,
-            token: genToken(user._id)
-        });
-    } else {
-        res.status(400) // not successful
-        throw new Error('User Register Error')
-    };
-    await User.save();
+    // If the user is not found, throw an error
+  } else {
+    res.status(400);
+    throw new Error('Invalid email and/or password');
+  }
+  await loginUser.save();
 });
 
+// Define an asynchronous function for user registration
+const registerUser = asyncHandler(async (req, res) => {
+  const { username, email, password } = req.body;
 
+  // Check if user already exists by checking email
+  const userExists = await User.findOne({ email });
+  if (userExists) {
+    res.status(400); // Error
+    throw new Error('User Already Exists');
+  }
 
+  // CREATE
+  // If user does not exist, create user in the database
+  const user = await User.create({
+    username,
+    email,
+    password,
+  });
+  // Once user is created, return success with database assigned ID
+  if (user) {
+    res.status(201).json({
+      // Successful
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      wishlist: user.wishlist,
+      token: genToken(user._id),
+    });
+  } else {
+    res.status(400); // not successful
+    throw new Error('User Register Error');
+  }
+  await User.save();
+});
 
-module.exports = { registerUser, loginUser };
+// Define an asynchronous function for retrieving the user's wishlist
+const getWishlist = asyncHandler(async (req, res) => {
+  const { wishlist } = req.body;
+  try {
+    const wishlistData = await User.findOne({ wishlist });
+    if (wishlistData) {
+      return wishlistData.wishlist;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+// Export the functions for use in the user router module
+module.exports = { registerUser, loginUser, getWishlist };
+
