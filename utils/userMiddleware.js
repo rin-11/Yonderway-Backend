@@ -1,4 +1,6 @@
 
+const asyncHandler = require('express-async-handler');
+
 
 // User Error Handling Middleware
 const notFound = (req, res, next) => { // when the route is not found
@@ -19,4 +21,3 @@ const notFound = (req, res, next) => { // when the route is not found
 
   
   module.exports = { notFound, errorHandler };
-

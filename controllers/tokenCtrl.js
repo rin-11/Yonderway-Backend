@@ -1,5 +1,5 @@
 
-const jwtToken = require('jsonwebtoken');
+
 const asyncHandler = require('express-async-handler');
 
 // Import all the models where get ID required
@@ -9,22 +9,10 @@ const Restaurant = require('../models/Restaurant');
 const Wishlist = require('../models/wishlistModel');
 
 // create user ID using jsonwebtoke and store
-const genToken = (req, res, next) => {
-    // request header authorzation
-    // provides credentials that authenticate a user agent with a server
-    const token = req.headers.authorization
-
-    try {
-    // decrypt token ID to store
-    const decryptToken = jwtToken.verify(token, process.env.JWT_SECRET);
-    // require User ID
-    req.userId = decryptToken.userId
-    next();
-    } catch (err) {
-        console.error(error);
-        res.status(500).json({ message: 'Token Error' });
-        }
-     };
+const token = require('jsonwebtoken');
+const genToken = (id) => {
+    return token.sign({id}, process.env.JWT_SECRET, {expiresIn: '3d'});
+};
 
     
 

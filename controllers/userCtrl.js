@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
-const jwtToken = require('jsonwebtoken');
+const token = require('jsonwebtoken');
 const { genToken } = require('./tokenCtrl');
+const { notFound, errorHandler } = require('../utils/userMiddleware');
 const bcrypt = require('bcrypt');
 const User = require('../models/userModel');
 
@@ -8,29 +9,26 @@ const User = require('../models/userModel');
 const loginUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
 
-    try{
     // find user in DB by email
     const user = await User.findOne({ email });
-    // if user email not found
-    if (!user){
-        throw new Error('User Does Not Exist')
-    }
-    const checkPassword = await bcrypt.compare(password, user.password);
-    if (!checkPassword){
-        throw new Error('Incorrect Password')
-    }
-    // use jwttoken userID
-    const token = jwtToken.sign({ userId: user._id }, process.env.JWT_SECRET, {expiresIn: '3d'});
-    res.json({
-        token: genToken(user._id),
-        _id: user._id,
-        username: user.username,
-        email: user.email
-        });
-    } catch {
+
+    // check email and password macth
+    if (user && (await user.matchPassword(password))){
+        // if the user if found return the user data
+        res.json({
+            _id: user._id,
+            username: user.username,
+            wishlist: user.wishlist,
+            email: user.email,
+            token: genToken(user._id)
+        })
+        // if the user is not found
+    } else {
         res.status(400)
-        throw new Error('Login Error')
+        throw new Error('Invalid email and/or password')
     }
+    await loginUser.save();
+
 });
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -42,6 +40,8 @@ const registerUser = asyncHandler(async (req, res) => {
         res.status(400) // error
         throw new Error('User Already Exists')
     };
+
+
 
 // CREATE
     // if user does not exist create user in DB

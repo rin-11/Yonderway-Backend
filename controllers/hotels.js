@@ -3,8 +3,7 @@ const { Hotel } = require('../utils/database'); // Import the Hotel model
 const asyncHandler = require('express-async-handler')
 
 
-const User = require('../models/userModel');
-const { genToken } = require('../utils/userMiddleware');
+
 
 exports.getHotelData = async (city) => {
   try {
